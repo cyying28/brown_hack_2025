@@ -404,6 +404,8 @@
     if(!gameRunning) {
       gameRunning = true;
       gameLoop();
+    } else {
+      requestAnimationFrame(gameLoop);
     }
   }
 
