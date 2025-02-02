@@ -122,9 +122,9 @@
     <p>Collect red apples to grow and increase your score!</p>
     <p>Grab power-ups for special advantages:</p>
     <ul style="list-style: none; padding: 0;">
-      <li>💥 Bomb (Purple) - Cuts opponent's tail</li>
-      <li>🚀 Speed (Yellow) - Temporary speed boost</li>
-      <li>🛡️ Shield (Blue) - Protection from self-collisions</li>
+      <li>💥 Bomb (Purple) - Cut opponent's tail.</li>
+      <li>🚀 Speed (Yellow) - Temporary speed boost for 20 seconds.</li>
+      <li>🛡️ Shield (Blue) - Invulnerable to collisions for 10 seconds.</li>
     </ul>
     <p>First to 500 points wins!</p>
   </div>
@@ -327,7 +327,7 @@
               break;
             case 'speed':
               snake.powerUps.add('speed');
-              setTimeout(() => snake.powerUps.delete('speed'), 5000);
+              setTimeout(() => snake.powerUps.delete('speed'), 20000);
               break;
             case 'bomb':
               const opponent = GameState.snakes[(index + 1) % 2];
@@ -347,9 +347,8 @@
       // Self collision
       for (let i = 1; i < snake.body.length; i++) {
         if (head.x === snake.body[i].x && head.y === snake.body[i].y) {
-          if(!snake.powerUps.has('shield')) {
-            gameOver(index);
-          }
+          snake.score = 0;
+          gameOver(index);
           return;
         }
       }
@@ -357,7 +356,10 @@
       // Opponent collision
       const opponent = GameState.snakes[(index + 1) % 2];
       if (opponent.body.some(segment => segment.x === head.x && segment.y === head.y)) {
-        gameOver(index);
+        if(!snake.powerUps.has('shield')) {
+          snake.score = 0;
+          gameOver(index);
+        }
         return;
       }
     });
