@@ -330,8 +330,14 @@
               setTimeout(() => snake.powerUps.delete('speed'), 5000);
               break;
             case 'bomb':
-              GameState.snakes[(index + 1) % 2].body.splice(5);
+              const opponent = GameState.snakes[(index + 1) % 2];
+              if (opponent.body.length > 1) {
+                opponent.body.pop(); // Remove the last segment of the opponent's snake
+              }
               break;
+            case 'shield':
+              snake.powerUps.add('shield')
+              setTimeout(() => snake.powerUps.delete('shield'), 10000)
           }
           return false;
         }
@@ -341,7 +347,9 @@
       // Self collision
       for (let i = 1; i < snake.body.length; i++) {
         if (head.x === snake.body[i].x && head.y === snake.body[i].y) {
-          if(!snake.powerUps.has('shield')) gameOver(index);
+          if(!snake.powerUps.has('shield')) {
+            gameOver(index);
+          }
           return;
         }
       }
