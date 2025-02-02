@@ -134,7 +134,7 @@
       <li>🚀 Speed (Yellow) - Temporary speed boost for 20 seconds.</li>
       <li>🛡️ Shield (Blue) - Invulnerable to collisions for 10 seconds.</li>
     </ul>
-    <p>First to 500 points wins!</p>
+    <p>Last one remaining wins!</p>
   </div>
 </div>
 
@@ -415,6 +415,7 @@
     const winnerIndex = (losingPlayerIndex + 1) % 2;
     GameState.snakes[winnerIndex].score += 100;
     GameState.snakes[winnerIndex].deactivateRainbowEffect();
+    GameState.snakes[losingPlayerIndex].deactivateRainbowEffect();
 
     gamePaused = true;
     document.getElementById('gameOverModal').style.display = 'block';
@@ -441,6 +442,8 @@
       snake.growthQueue = 0;
       snake.comboMultiplier = 1;
       snake.score = 0;
+
+      snake.deactivateRainbowEffect();
     });
     GameState.powerUps = [];
     GameState.particles = [];
