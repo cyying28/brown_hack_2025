@@ -178,6 +178,7 @@
       this.body = [startPos];
       this.direction = {x: 0, y: -1};
       this.nextDirection = {x: 0, y: -1};
+      this.permanentColor = color;
       this.color = color;
       this.controls = controls;
       this.score = 0;
@@ -187,6 +188,20 @@
       this.powerUps = new Set();
       this.lastAppleTime = 0;
       this.comboMultiplier = 1;
+    }
+
+    activateRainbowEffect() {
+      let colors = ['#ff0000', '#ff7f00', '#ffff00', '#00ff00', '#0000ff', '#4b0082', '#8b00ff'];
+      let index = 0;
+      this.rainbowInterval = setInterval(() => {
+        this.color = colors[index];
+        index = (index + 1) % colors.length;
+      }, 75);
+    }
+
+    deactivateRainbowEffect() {
+      clearInterval(this.rainbowInterval);
+      this.color = this.permanentColor;
     }
 
     get moveDelay() {
@@ -337,7 +352,12 @@
               break;
             case 'shield':
               snake.powerUps.add('shield')
-              setTimeout(() => snake.powerUps.delete('shield'), 10000)
+              snake.activateRainbowEffect();
+              setTimeout(() => {
+                snake.powerUps.delete('shield');
+                snake.deactivateRainbowEffect(); // Reset back to original color (adjust if needed)
+              }, 10000);
+              break;
           }
           return false;
         }
@@ -382,6 +402,7 @@
   function gameOver(losingPlayerIndex) {
     const winnerIndex = (losingPlayerIndex + 1) % 2;
     GameState.snakes[winnerIndex].score += 100;
+    GameState.snakes[winnerIndex].deactivateRainbowEffect();
 
     gamePaused = true;
     document.getElementById('gameOverModal').style.display = 'block';
