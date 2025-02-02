@@ -24,6 +24,14 @@
       gap: 20px;
       margin-bottom: 15px;
     }
+
+    .game-info-title {
+      display: none;
+      font-size: 4em;
+      color: #2ecc71;
+      text-shadow: 0 0 10px #2ecc71;
+      margin: 20px 0;
+    }
     #startScreen {
       display: flex;
       flex-direction: column;
@@ -158,8 +166,12 @@
   </div>
 </div>
 
+<div class="game-info-title">
+  <div id="title">NEON SNAKE DUEL</div>
+</div>
+
 <div class="game-info">
-  <div id="score">P1: 0 | P2: 0</div>
+  <div id="score">P1 (red): 0 | P2 (blue): 0</div>
   <div id="combo">Combo: 1x</div>
 </div>
 <canvas id="gameCanvas" width="800" height="600"></canvas>
@@ -445,6 +457,7 @@
     gameRunning = false;
     document.getElementById('gameOverModal').style.display = 'none';
     document.getElementById('startScreen').style.display = 'flex';
+    document.querySelector('.game-info-title').style.display = 'none';
     document.querySelector('.game-info').style.display = 'none';
     CANVAS.style.display = 'none';
     CANVAS.style.filter = 'none';
@@ -463,11 +476,30 @@
             `Combo: ${Math.max(...GameState.snakes.map(s => s.comboMultiplier))}x`;
   }
 
+  function drawGrid() {
+    CTX.strokeStyle = '#34495e';  // Change the last number to increase opacity
+    CTX.lineWidth = 1;
+    for (let x = 0; x <= CANVAS.width; x += GRID_SIZE) {
+      CTX.beginPath();
+      CTX.moveTo(x, 0);
+      CTX.lineTo(x, CANVAS.height);
+      CTX.stroke();
+    }
+    for (let y = 0; y <= CANVAS.height; y += GRID_SIZE) {
+      CTX.beginPath();
+      CTX.moveTo(0, y);
+      CTX.lineTo(CANVAS.width, y);
+      CTX.stroke();
+    }
+  }
+
   function gameLoop() {
     if (gamePaused) return;
 
     CTX.fillStyle = '#2c3e50';
     CTX.fillRect(0, 0, CANVAS.width, CANVAS.height);
+
+    drawGrid();
 
     // Update particles
     GameState.particles = GameState.particles.filter(p => {
@@ -503,6 +535,7 @@
     //if(gameRunning) return;
 
     document.getElementById('startScreen').style.display = 'none';
+    document.querySelector('.game-info-title').style.display = 'flex';
     document.querySelector('.game-info').style.display = 'flex';
     CANVAS.style.display = 'block';
 
